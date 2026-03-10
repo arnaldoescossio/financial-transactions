@@ -12,6 +12,16 @@ class PostgresTransactionRepository(TransactionRepository):
         models = self._db.query(TransactionModel).all()
         return [self._to_entity(model) for model in models]
         # return [self._to_entity(model) for model in transaction_models]
+    
+    def save(self, transaction: Transaction) -> Transaction:
+        model = TransactionModel(
+            amount=transaction.amount,
+            status=transaction.status.value
+        )
+        self._db.add(model)
+        self._db.commit()
+        self._db.refresh(model)
+        return self._to_entity(model)
 
     def _to_entity(self, model: TransactionModel) -> Transaction:
         return Transaction(

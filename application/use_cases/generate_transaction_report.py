@@ -1,5 +1,6 @@
 from application.config.logging_config import logger
 from application.dtos.transaction_report_dto import TransactionReportDTO
+
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 from domain.repositories.transaction_repository import TransactionRepository
 
@@ -9,7 +10,7 @@ class GenerateTransactionReportUseCase:
     def __init__(self, repository: TransactionRepository):
         self._repository = repository
 
-    def execute(self) -> TransactionReportDTO:
+    def execute(self) -> TransactionReportDTO: 
 
         transactions = self._repository.get_all()
 

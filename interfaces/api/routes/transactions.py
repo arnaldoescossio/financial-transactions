@@ -1,28 +1,54 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from application.use_cases.generate_transaction_report import GenerateTransactionReportUseCase
+from application.use_cases.use_case_factory import UseCaseFactory
+from application.dtos.create_transaction_dto import CreateTransactionDTO
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 from infrastructure.repositories.postgres_transaction_repository import PostgresTransactionRepository
 from infrastructure.database import get_db
 from application.config.logging_config import logger
+from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
 from interfaces.api.security.security import verify_token
 
 app = FastAPI()
 
-def get_use_case(db: Session = Depends(get_db)):
-    repository = PostgresTransactionRepository(db)
-    use_case = GenerateTransactionReportUseCase(repository)
-    return use_case
+@app.post("/transactions")
+def create_transaction(
+    transaction_data: CreateTransactionDTO,
+    user = Depends(verify_token),
+    db: Session = Depends(get_db)
+):
+    try:
+        logger.info(f"User {user['user']} is creating a new transaction")
+        repository = PostgresTransactionRepository(db)
+        use_case = UseCaseFactory.create(TransactionUseCaseType.CREATE, repository)
+        return use_case.execute(transaction_data)
+    except Exception as e:
+        logger.error(f"Error creating transaction: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail={"error": str(e)}
+        )
 
 @app.get("/transactions/report")
 def generate_report(
     user = Depends(verify_token),
-    use_case: GenerateTransactionReportUseCase = Depends(get_use_case)
+    db: Session = Depends(get_db)
 ):
     try:
         logger.info(f"User {user['user']} is generating a transaction report")
+        repository = PostgresTransactionRepository(db)
+        use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
         return use_case.execute()
     except NoValidTransactionException as e:
         logger.error(f"Error: {e}")
-        return {"error": str(e)}
-  
+        raise HTTPException(
+            status_code=400,
+            detail={"error": str(e)}
+        )
+    except Exception as e:
+        logger.error(f"Error generating report: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail={"error": str(e)}
+        )
+        
