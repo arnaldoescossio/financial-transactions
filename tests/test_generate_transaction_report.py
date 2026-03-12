@@ -16,6 +16,10 @@ def test_generate_transaction_report():
                 # Another valid transaction         
                 Transaction(id=3, amount=200.0, status=TransactionStatus.SUCCESS),
             ]
+
+        def save(self, transaction):
+            raise None
+
         
     repository = FakeTransactionRepository()
     use_case = GenerateTransactionReportUseCase(repository)
@@ -35,6 +39,10 @@ def test_generate_transaction_report_no_valid_transactions():
                 Transaction(id=2, amount=50.0, status=TransactionStatus.FAILED),
                 Transaction(id=3, amount=0.0, status=TransactionStatus.SUCCESS),
             ]
+
+        def save(self, transaction):
+            return None
+
 
     repository = EmptyTransactionRepository()
     use_case = GenerateTransactionReportUseCase(repository)

@@ -1,16 +1,15 @@
-from pydantic import BaseModel
-from decimal import Decimal
+from dataclasses import dataclass
 
 from domain.entities.transaction import Transaction
 from domain.enums.transaction_status import TransactionStatus
 
-
-class CreateTransactionDTO(BaseModel):
+@dataclass
+class CreateTransactionDTO:
     amount: float
     status: str
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True
 
     def to_entity(self):
         return Transaction(            
