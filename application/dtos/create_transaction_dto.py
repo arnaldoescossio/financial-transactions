@@ -8,8 +8,8 @@ class CreateTransactionDTO:
     amount: float
     status: str
 
-    # class Config:
-    #     from_attributes = True
+    class Config:
+        from_attributes = True
 
     def to_entity(self):
         return Transaction(            
