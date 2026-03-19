@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from application.use_cases.use_case_factory import UseCaseFactory
 from application.dtos.create_transaction_dto import CreateTransactionDTO
@@ -9,9 +9,9 @@ from application.config.logging_config import logger
 from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
 from interfaces.api.security.security import verify_token
 
-app = FastAPI()
+router = APIRouter(prefix="/api/v1", tags=["transactions"])
 
-@app.post("/transactions")
+@router.post("/transactions")
 def create_transaction(
     transaction_data: CreateTransactionDTO,
     user = Depends(verify_token),
@@ -29,7 +29,7 @@ def create_transaction(
             detail={"error": str(e)}
         )
 
-@app.get("/transactions/report")
+@router.get("/transactions/report")
 def generate_report(
     user = Depends(verify_token),
     db: Session = Depends(get_db)
