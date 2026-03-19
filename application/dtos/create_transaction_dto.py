@@ -1,17 +1,15 @@
 from dataclasses import dataclass
 
+from application.dtos.base_dto import Dto
 from domain.entities.transaction import Transaction
 from domain.enums.transaction_status import TransactionStatus
 
 @dataclass
-class CreateTransactionDTO:
+class CreateTransactionDTO(Dto):
     amount: float
     status: str
 
-    class Config:
-        from_attributes = True
-
-    def to_entity(self):
+    def to_entity(self) -> Transaction:
         return Transaction(            
             id=None,
             amount=self.amount,
@@ -19,7 +17,7 @@ class CreateTransactionDTO:
         )
     
     @staticmethod
-    def from_entity(entity):
+    def from_entity(entity) -> 'CreateTransactionDTO':
         return CreateTransactionDTO(
             amount=float(entity.amount),
             status=entity.status.value

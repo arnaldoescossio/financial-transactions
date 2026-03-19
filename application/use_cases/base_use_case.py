@@ -1,17 +1,19 @@
-from abc import ABC, abstractmethod
-from typing import TypeVar, Generic
+from abc import abstractmethod
 
-T = TypeVar('T')
+from application.dtos.base_dto import Dto
+from domain.repositories.transaction_repository import TransactionRepository
 
 
-class UseCase(ABC, Generic[T]):
+class UseCase[D: Dto]:
     """Abstract base class for all use cases.
     
     All use cases must implement the execute method which contains the business logic.
     """
-
+    def __init__(self, repository: TransactionRepository):
+        self.repository = repository
+    
     @abstractmethod
-    def execute(self, data) -> T:
+    def execute(self, data: D) -> D:
         """Execute the use case logic and return the result.
         
         Returns:

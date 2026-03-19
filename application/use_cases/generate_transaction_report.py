@@ -1,15 +1,19 @@
+from typing import override
+
 from application.config.logging_config import logger
 from application.dtos.transaction_report_dto import TransactionReportDTO
 
+from application.use_cases.base_use_case import UseCase
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 from domain.repositories.transaction_repository import TransactionRepository
 
 
-class GenerateTransactionReportUseCase:
+class GenerateTransactionReportUseCase(UseCase[TransactionReportDTO]):      
 
     def __init__(self, repository: TransactionRepository):
         self._repository = repository
 
+    @override
     def execute(self) -> TransactionReportDTO: 
 
         transactions = self._repository.get_all()
