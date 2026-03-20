@@ -1,13 +1,33 @@
-from abc import ABC, abstractmethod
+from typing import override
+
+from sqlalchemy.orm import Session
+
 from domain.entities.transaction import Transaction
+from domain.repositories.base_repository import Repository
+from domain.entities.transaction import Transaction, TransactionStatus
+from infrastructure.models.transaction_model import TransactionModel
 
-
-class TransactionRepository(ABC):
+class TransactionRepository(Repository[Transaction]):   
     
-    @abstractmethod
+    @override
     def get_all(self) -> list[Transaction]:
-        pass
+        models = self._db.query(TransactionModel).all()
+        return [self._to_entity(model) for model in models]
     
-    @abstractmethod
+    @override
     def save(self, transaction: Transaction) -> Transaction:
-        pass
+        model = TransactionModel(
+            amount=transaction.amount,
+            status=transaction.status.value
+        )
+        self._db.add(model)
+        self._db.commit()
+        self._db.refresh(model)
+        return self._to_entity(model)
+
+    def _to_entity(self, model: TransactionModel) -> Transaction:
+        return Transaction(
+            id=model.id,
+            amount=model.amount,
+            status=TransactionStatus(model.status)
+        )

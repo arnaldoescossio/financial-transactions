@@ -7,7 +7,7 @@ from domain.enums.transaction_status import TransactionStatus
 @dataclass
 class CreateTransactionDTO(Dto):
     amount: float
-    status: str
+    status: str # Change to TransactionStatus by padding validation
 
     def to_entity(self) -> Transaction:
         return Transaction(            

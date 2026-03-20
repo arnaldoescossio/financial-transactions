@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import Mock
 
 from application.use_cases.use_case_factory import UseCaseFactory
-from application.use_cases.create_transaction import CreateTransactionUseCase
-from application.use_cases.generate_transaction_report import GenerateTransactionReportUseCase
+from application.use_cases.transaction.create_transaction import CreateTransactionUseCase
+from application.use_cases.transaction.generate_transaction_report import GenerateTransactionReportUseCase
 from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
 from domain.repositories.transaction_repository import TransactionRepository
 

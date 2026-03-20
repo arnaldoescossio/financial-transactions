@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 from pytest_mock import mocker
 
-from application.use_cases.create_transaction import CreateTransactionUseCase
+from application.use_cases.transaction.create_transaction import CreateTransactionUseCase
 from application.dtos.create_transaction_dto import CreateTransactionDTO
 from domain.entities.transaction import Transaction
 from domain.enums.transaction_status import TransactionStatus

@@ -1,6 +1,6 @@
 import pytest
 
-from application.use_cases.generate_transaction_report import GenerateTransactionReportUseCase
+from application.use_cases.transaction.generate_transaction_report import GenerateTransactionReportUseCase
 from domain.entities.transaction import Transaction
 from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.transaction_repository import TransactionRepository

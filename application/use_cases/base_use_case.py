@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 from application.dtos.base_dto import Dto
-from domain.repositories.transaction_repository import TransactionRepository
+from domain.repositories.base_repository import Repository
 
 
 class UseCase[D: Dto]:
@@ -9,7 +9,7 @@ class UseCase[D: Dto]:
     
     All use cases must implement the execute method which contains the business logic.
     """
-    def __init__(self, repository: TransactionRepository):
+    def __init__(self, repository: Repository):
         self.repository = repository
     
     @abstractmethod

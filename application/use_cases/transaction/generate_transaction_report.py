@@ -10,13 +10,10 @@ from domain.repositories.transaction_repository import TransactionRepository
 
 class GenerateTransactionReportUseCase(UseCase[TransactionReportDTO]):      
 
-    def __init__(self, repository: TransactionRepository):
-        self._repository = repository
-
     @override
     def execute(self) -> TransactionReportDTO: 
 
-        transactions = self._repository.get_all()
+        transactions = self.repository.get_all()
 
         valid_transactions = [t for t in transactions if t.is_valid()]
 

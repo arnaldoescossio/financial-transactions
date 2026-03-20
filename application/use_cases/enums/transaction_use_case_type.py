@@ -2,8 +2,8 @@
 from enum import Enum
 
 from application.use_cases.base_use_case import UseCase
-from application.use_cases.create_transaction import CreateTransactionUseCase
-from application.use_cases.generate_transaction_report import GenerateTransactionReportUseCase
+from application.use_cases.transaction.create_transaction import CreateTransactionUseCase
+from application.use_cases.transaction.generate_transaction_report import GenerateTransactionReportUseCase
 
 
 class TransactionUseCaseType(Enum):

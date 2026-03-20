@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from application.use_cases.use_case_factory import UseCaseFactory
 from application.dtos.create_transaction_dto import CreateTransactionDTO
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
-from infrastructure.repositories.postgres_transaction_repository import PostgresTransactionRepository
+from domain.repositories.transaction_repository import TransactionRepository
 from infrastructure.database import get_db
 from application.config.logging_config import logger
 from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
@@ -19,7 +19,7 @@ def create_transaction(
 ):
     try:
         logger.info(f"User {user['user']} is creating a new transaction")
-        repository = PostgresTransactionRepository(db)
+        repository = TransactionRepository(db)
         use_case = UseCaseFactory.create(TransactionUseCaseType.CREATE, repository)
         return use_case.execute(transaction_data)
     except Exception as e:
@@ -36,7 +36,7 @@ def generate_report(
 ):
     try:
         logger.info(f"User {user['user']} is generating a transaction report")
-        repository = PostgresTransactionRepository(db)
+        repository = TransactionRepository(db)
         use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
         return use_case.execute()
     except NoValidTransactionException as e:
