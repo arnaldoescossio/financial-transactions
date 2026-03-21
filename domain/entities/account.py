@@ -11,20 +11,20 @@ class Account(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     @field_validator("balance")
-    # @classmethod
-    def balance_non_negative(cls, v: float) -> float:
-        if v < 0.00:
+    @classmethod
+    def balance_non_negative(cls, value: float) -> float:
+        if value < 0.00:
             raise ValueError("balance cannot be negative")
-        return v
+        return value
 
 # Todas as classes abaixo serão usadas para validação e transferência de dados, mas não possuem lógica de negócios complexa,
 
 class AccountCreate(BaseModel):
-    balance: float = 0.00
+    balance: float
 
 class AccountRead(BaseModel):
     # model_config = ConfigDict(from_attributes=True)
-
+    id: int 
     balance: float
     transactions: list[Transaction] = []
 

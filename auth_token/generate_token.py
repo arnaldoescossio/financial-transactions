@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from jose import jwt
-from interfaces.api.security.security import ALGORITHM, SECRET_KEY
+from api.security.auth import ALGORITHM, SECRET_KEY
 
 def create_access_token(data: dict):
     to_encode = data.copy()

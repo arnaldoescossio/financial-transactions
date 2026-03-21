@@ -1,5 +1,3 @@
-from typing import Any
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -9,12 +7,12 @@ from application.use_cases.account.create_account import CreateAccountUseCase
 from domain.entities.account import Account, AccountCreate, AccountRead, AccountRead
 from domain.repositories.account_repository import AccountRepository
 from infrastructure.database import get_db
-from interfaces.api.security.security import verify_token
+from api.security.auth import verify_token
 
 
 router = APIRouter(prefix="/api/v1", tags=["accounts"])
 
-@router.post("/accounts")
+@router.post("/accounts", response_model=AccountRead)
 def create_account(
     account_data: AccountCreate,
     user = Depends(verify_token),
@@ -24,7 +22,7 @@ def create_account(
     use_case = CreateAccountUseCase(repository=AccountRepository(db))
     dto = use_case.execute(CreateAccountDTO.from_entity(account_data))
     return AccountRead(
-        id=dto.id,
+        # id=dto.id,
         balance=dto.balance
     )
     # return dto.to_entity()

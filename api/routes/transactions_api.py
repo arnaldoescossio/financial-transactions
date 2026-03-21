@@ -7,7 +7,7 @@ from domain.repositories.transaction_repository import TransactionRepository
 from infrastructure.database import get_db
 from application.config.logging_config import logger
 from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
-from interfaces.api.security.security import verify_token
+from api.security.auth import verify_token
 
 router = APIRouter(prefix="/api/v1", tags=["transactions"])
 
