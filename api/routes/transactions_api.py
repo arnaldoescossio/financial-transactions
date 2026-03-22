@@ -34,21 +34,21 @@ def generate_report(
     user = Depends(verify_token),
     db: Session = Depends(get_db)
 ):
-    try:
-        logger.info(f"User {user['user']} is generating a transaction report")
-        repository = TransactionRepository(db)
-        use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
-        return use_case.execute()
-    except NoValidTransactionException as e:
-        logger.error(f"Error: {e}")
-        raise HTTPException(
-            status_code=400,
-            detail={"error": str(e)}
-        )
-    except Exception as e:
-        logger.error(f"Error generating report: {e}")
-        raise HTTPException(
-            status_code=400,
-            detail={"error": str(e)}
-        )
+    # try:
+    logger.info(f"User {user['user']} is generating a transaction report")
+    repository = TransactionRepository(db)
+    use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
+    return use_case.execute()
+    # except NoValidTransactionException as e:
+    #     logger.error(f"Error: {e}")
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail={"error": str(e)}
+    #     )
+    # except Exception as e:
+    #     logger.error(f"Error generating report: {e}")
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail={"error": str(e)}
+    #     )
         

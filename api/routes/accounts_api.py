@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -40,4 +40,7 @@ def get_account(
 ) -> AccountResponse:
     logger.info(f"User is requesting details of account {account_id}")
     account = db.execute(select(AccountModel).where(AccountModel.id == account_id)).scalars().first()
+    if not account:
+        logger.warning(f"Account with id {account_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Account not found")
     return account
