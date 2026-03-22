@@ -5,7 +5,7 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:postgres@localhost:5432/transactions")
 
 engine = create_engine(DATABASE_URL, echo=False)
-SessionLocal = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     pass

@@ -17,13 +17,10 @@ class Account(BaseModel):
             raise ValueError("balance cannot be negative")
         return value
 
-# Todas as classes abaixo serão usadas para validação e transferência de dados, mas não possuem lógica de negócios complexa,
-
 class AccountCreate(BaseModel):
     balance: float
 
-class AccountRead(BaseModel):
-    # model_config = ConfigDict(from_attributes=True)
+class AccountResponse(BaseModel):
     id: int 
     balance: float
     transactions: list[Transaction] = []

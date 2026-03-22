@@ -1,16 +1,15 @@
-from application.dtos.create_account_dto import CreateAccountDTO
 from application.use_cases.base_use_case import UseCase
-from domain.entities.account import Account
+from domain.entities.account import Account, AccountCreate
 from domain.repositories.account_repository import AccountRepository
 
 
-class CreateAccountUseCase(UseCase[CreateAccountDTO]):
+class CreateAccountUseCase(UseCase):
     """Use case for creating a new account."""
     
     def __init__(self, repository: AccountRepository):
         super().__init__(repository)
     
-    def execute(self, dto: CreateAccountDTO) -> CreateAccountDTO:
+    def execute(self, dto: AccountCreate) -> Account:
         """Create a new account.
         
         Args:
@@ -22,7 +21,9 @@ class CreateAccountUseCase(UseCase[CreateAccountDTO]):
         Raises:
             ValueError: If the account data is invalid
         """
-        account = dto.to_entity()
+        account = Account(
+            id=None,
+            balance=dto.balance
+        )
         
-        account = self.repository.save(account)
-        return CreateAccountDTO.from_entity(account)
+        return self.repository.save(account)
