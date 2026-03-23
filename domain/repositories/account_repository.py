@@ -1,19 +1,20 @@
 from abc import abstractmethod
 
-from domain.entities.account import Account
+from domain.entities.account import Account, AccountResponse
 from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.base_repository import Repository
 from infrastructure.models.account_model import AccountModel
 
-class AccountRepository(Repository[Account]):
+class AccountRepository(Repository):
     """Repository for managing account data."""
     
     @abstractmethod
     def save(self, account) -> Account:
         """Create a new account in the repository."""
         model = AccountModel(
-            balance=account.balance        
-            )
+            balance=account.balance,
+            type=account.type
+        )
         self._db.add(model)
         self._db.commit()
         self._db.refresh(model)
@@ -39,9 +40,10 @@ class AccountRepository(Repository[Account]):
         # Implementation to delete the account from the database or in-memory storage
         pass
 
-    def _to_entity(self, model: AccountModel) -> Account:
-        return Account(
+    def _to_entity(self, model: AccountModel) -> AccountResponse:
+        return AccountResponse(
             id=model.id,
             balance=model.balance,
+            type=model.type,
             transactions=[]  # Placeholder for transactions, can be populated with actual data if needed
         )

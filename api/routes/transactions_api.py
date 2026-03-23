@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from application.use_cases.use_case_factory import UseCaseFactory
 from application.dtos.create_transaction_dto import CreateTransactionDTO
+from domain.entities.transaction import TransactionCreate, TransactionResponse
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 from domain.repositories.transaction_repository import TransactionRepository
 from infrastructure.database import get_db
@@ -11,12 +12,12 @@ from api.security.auth import verify_token
 
 router = APIRouter(prefix="/api/v1", tags=["transactions"])
 
-@router.post("/transactions")
+@router.post("/transactions", response_model=TransactionResponse)
 def create_transaction(
-    transaction_data: CreateTransactionDTO,
+    transaction_data: TransactionCreate,
     user = Depends(verify_token),
     db: Session = Depends(get_db)
-):
+) -> TransactionResponse:
     try:
         logger.info(f"User {user['user']} is creating a new transaction")
         repository = TransactionRepository(db)
@@ -39,6 +40,19 @@ def generate_report(
     repository = TransactionRepository(db)
     use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
     return use_case.execute()
+
+@router.get("/transactions", response_model=list[TransactionResponse])
+def list_transactions(
+    user = Depends(verify_token),
+    db: Session = Depends(get_db)
+) -> list[TransactionResponse]:
+    logger.info(f"User {user['user']} is listing transactions")
+    repository = TransactionRepository(db)
+    # use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
+    
+    return repository.get_all()
+
+
     # except NoValidTransactionException as e:
     #     logger.error(f"Error: {e}")
     #     raise HTTPException(

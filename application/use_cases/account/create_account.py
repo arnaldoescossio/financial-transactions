@@ -22,8 +22,8 @@ class CreateAccountUseCase(UseCase):
             ValueError: If the account data is invalid
         """
         account = Account(
-            id=None,
-            balance=dto.balance
+            balance=dto.balance,
+            type=dto.type
         )
         
         return self.repository.save(account)

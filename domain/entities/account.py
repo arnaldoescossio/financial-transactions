@@ -1,33 +1,27 @@
-from decimal import Decimal
+from typing import Literal
 
-from domain.entities.transaction import Transaction
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class Account(BaseModel):
-    id: int | None 
-    balance: float = 0.00
-    transactions: list[Transaction] = Field(default_factory=list)
+    balance: float = Field(ge=0.00)
+    type: Literal["checking", "savings"] = Field(default="checking")
 
+    # @field_validator("balance")
+    # @classmethod
+    # def balance_non_negative(cls, value: float) -> float:
+    #     if value < 0.00:
+    #         raise ValueError("balance cannot be negative")
+    #     return value
+
+class AccountCreate(Account):
+    pass
+
+class AccountResponse(Account):
     model_config = ConfigDict(from_attributes=True)
 
-    @field_validator("balance")
-    @classmethod
-    def balance_non_negative(cls, value: float) -> float:
-        if value < 0.00:
-            raise ValueError("balance cannot be negative")
-        return value
-
-class AccountCreate(BaseModel):
-    balance: float
-
-class AccountResponse(BaseModel):
     id: int 
-    balance: float
-    transactions: list[Transaction] = []
+    # transactions: list[Transaction] = Field(default_factory=list)
 
-# AccountUpdate can be used for partial updates, so all fields are optional
-# class AccountUpdate(BaseModel):
-#     balance: Decimal | None = None
 
 #     @field_validator("balance")
 #     @classmethod
@@ -35,12 +29,6 @@ class AccountResponse(BaseModel):
 #         if v is not None and v < Decimal("0.00"):
 #             raise ValueError("balance cannot be negative")
 #         return v.quantize(Decimal("0.01")) if v is not None else None
-
-## 
-# I removed the dataclass version of Account since we're using Pydantic models for validation and serialization. 
-# The AccountRead model can be used to represent the account data when reading from the database, 
-#   while AccountCreate and AccountUpdate can be used for creating and updating accounts, respectively.
-##
 
     # def add_transaction(self, transaction: Transaction):
     #     transaction.account_id = self.id
