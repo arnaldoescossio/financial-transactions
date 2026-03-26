@@ -1,7 +1,7 @@
 import pytest
 
 from application.use_cases.transaction.generate_transaction_report import GenerateTransactionReportUseCase
-from domain.entities.transaction import Transaction
+from domain.entities.transaction import TransactionBase
 from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.transaction_repository import TransactionRepository
 
@@ -10,11 +10,11 @@ def test_generate_transaction_report():
         def get_all(self):
             return [
                 # Valid transaction
-                Transaction(id=1, amount=100.0, status=TransactionStatus.SUCCESS),
+                TransactionBase(id=1, amount=100.0, status=TransactionStatus.SUCCESS),
                 # Failed transaction
-                Transaction(id=2, amount=50.0, status=TransactionStatus.FAILED),
+                TransactionBase(id=2, amount=50.0, status=TransactionStatus.FAILED),
                 # Another valid transaction         
-                Transaction(id=3, amount=200.0, status=TransactionStatus.SUCCESS),
+                TransactionBase(id=3, amount=200.0, status=TransactionStatus.SUCCESS),
             ]
 
         def save(self, transaction):
@@ -35,9 +35,9 @@ def test_generate_transaction_report_no_valid_transactions():
     class EmptyTransactionRepository(TransactionRepository):
         def get_all(self):
             return [
-                Transaction(id=1, amount=100.0, status=TransactionStatus.FAILED),
-                Transaction(id=2, amount=50.0, status=TransactionStatus.FAILED),
-                Transaction(id=3, amount=0.0, status=TransactionStatus.SUCCESS),
+                TransactionBase(id=1, amount=100.0, status=TransactionStatus.FAILED),
+                TransactionBase(id=2, amount=50.0, status=TransactionStatus.FAILED),
+                TransactionBase(id=3, amount=0.0, status=TransactionStatus.SUCCESS),
             ]
 
         def save(self, transaction):

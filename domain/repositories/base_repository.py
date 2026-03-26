@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
 from pytest import Session
-from domain.entities.transaction import Transaction
+from domain.entities.transaction import TransactionBase
 
 
 class Repository[E]:
@@ -13,6 +13,12 @@ class Repository[E]:
     def get_all(self) -> list[E]:
         """Retrieve all entities from the repository."""
         # Implementation to retrieve all entities from the database or in-memory storage
+        pass
+
+    @abstractmethod
+    def get_by_id(self, entity_id: int) -> E:
+        """Retrieve an entity by its ID."""
+        # Implementation to retrieve an entity by its ID from the database or in-memory storage
         pass
     
     @abstractmethod

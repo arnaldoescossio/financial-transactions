@@ -1,15 +1,11 @@
 from application.use_cases.base_use_case import UseCase
-from domain.entities.account import Account, AccountCreate
-from domain.repositories.account_repository import AccountRepository
+from domain.entities.account import AccountCreate, AccountResponse
 
 
 class CreateAccountUseCase(UseCase):
     """Use case for creating a new account."""
     
-    def __init__(self, repository: AccountRepository):
-        super().__init__(repository)
-    
-    def execute(self, dto: AccountCreate) -> Account:
+    def execute(self, account: AccountCreate) -> AccountResponse:
         """Create a new account.
         
         Args:
@@ -21,9 +17,11 @@ class CreateAccountUseCase(UseCase):
         Raises:
             ValueError: If the account data is invalid
         """
-        account = Account(
-            balance=dto.balance,
-            type=dto.type
-        )
         
-        return self.repository.save(account)
+        account = self.repository.save(account)
+
+        return AccountResponse(
+            id=account.id,
+            balance=account.balance,
+            type=account.type,
+        )

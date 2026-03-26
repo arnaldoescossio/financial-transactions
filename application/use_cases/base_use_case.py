@@ -1,10 +1,9 @@
 from abc import abstractmethod
 
-from application.dtos.base_dto import Dto
 from domain.repositories.base_repository import Repository
 
 
-class UseCase[D: Dto]:
+class UseCase[D]:
     """Abstract base class for all use cases.
     
     All use cases must implement the execute method which contains the business logic.

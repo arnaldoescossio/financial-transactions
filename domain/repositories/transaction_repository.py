@@ -2,20 +2,20 @@ from typing import override
 
 from sqlalchemy.orm import Session
 
-from domain.entities.transaction import Transaction, TransactionCreate, TransactionResponse
+from domain.entities.transaction import TransactionBase, TransactionCreate, TransactionResponse
 from domain.repositories.base_repository import Repository
-from domain.entities.transaction import Transaction, TransactionStatus
+from domain.entities.transaction import TransactionBase, TransactionStatus
 from infrastructure.models.transaction_model import TransactionModel
 
 class TransactionRepository(Repository):   
     
     @override
-    def get_all(self) -> list[Transaction]:
+    def get_all(self) -> list[TransactionModel]:
         models = self._db.query(TransactionModel).all()
-        return [self._to_entity(model) for model in models]
+        return models
     
     @override
-    def save(self, transaction: TransactionCreate) -> TransactionResponse:
+    def save(self, transaction: TransactionCreate) -> TransactionModel:
         model = TransactionModel(
             amount=transaction.amount,
             status=transaction.status.value,
@@ -24,12 +24,12 @@ class TransactionRepository(Repository):
         self._db.add(model)
         self._db.commit()
         self._db.refresh(model)
-        return self._to_entity(model)
+        return model
 
-    def _to_entity(self, model: TransactionModel) -> TransactionResponse:
-        return TransactionResponse(
-            id=model.id,
-            amount=model.amount,
-            status=TransactionStatus(model.status),
-            account=model.account
+    def get_by_account_id(self, account_id: int, transaction_status: TransactionStatus = TransactionStatus.SUCCESS) -> list[TransactionModel]:
+        query = self._db.query(TransactionModel.id, TransactionModel.amount, TransactionModel.status).filter(
+            TransactionModel.account_id == account_id,
+            TransactionModel.status == transaction_status.value
         )
+        
+        return query.all()

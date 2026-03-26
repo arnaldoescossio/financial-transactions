@@ -1,7 +1,7 @@
 import pytest
 from pytest_mock import MockerFixture
 from application.dtos.create_transaction_dto import CreateTransactionDTO
-from domain.entities.transaction import Transaction
+from domain.entities.transaction import TransactionBase
 from domain.enums.transaction_status import TransactionStatus
 
 
@@ -22,7 +22,7 @@ def dto_with_decimal_amount():
 
 @pytest.fixture
 def entity_with_pending_status():
-    return Transaction(
+    return TransactionBase(
         id=2,
         amount=50.0,
         status=TransactionStatus.PENDING
@@ -31,7 +31,7 @@ def entity_with_pending_status():
 
 @pytest.fixture
 def entity_with_failed_status():
-    return Transaction(
+    return TransactionBase(
         id=3,
         amount=75.50,
         status=TransactionStatus.FAILED
@@ -45,7 +45,7 @@ class TestCreateTransactionDTOEdgeCases:
         """Test conversion with zero amount"""
         result = dto_with_zero_amount.to_entity()
         
-        assert isinstance(result, Transaction)
+        assert isinstance(result, TransactionBase)
         assert result.amount == 0.0
         assert result.status == TransactionStatus.SUCCESS
 
@@ -53,7 +53,7 @@ class TestCreateTransactionDTOEdgeCases:
         """Test conversion with large amount"""
         result = dto_with_large_amount.to_entity()
         
-        assert isinstance(result, Transaction)
+        assert isinstance(result, TransactionBase)
         assert result.amount == 999999.99
         assert result.status == TransactionStatus.SUCCESS
 
@@ -179,7 +179,7 @@ class TestCreateTransactionDTOErrorHandling:
 
     def test_from_entity_with_mock(self, mocker: MockerFixture):
         """Test from_entity with mocked entity"""
-        mock_entity = mocker.MagicMock(spec=Transaction)
+        mock_entity = mocker.MagicMock(spec=TransactionBase)
         mock_entity.amount = 250.0
         mock_entity.status = TransactionStatus.SUCCESS
         

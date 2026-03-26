@@ -1,12 +1,9 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
-from typing import ClassVar
-from domain.entities.account import AccountResponse
+from domain.entities.account import AccountBase
 from domain.enums.transaction_status import TransactionStatus
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict
 
-class Transaction(BaseModel):
+class TransactionBase(BaseModel):
+    id: int | None = None
     amount: float
     status: TransactionStatus
 
@@ -16,11 +13,10 @@ class Transaction(BaseModel):
     def is_failed(self) -> bool:
         return self.status == TransactionStatus.FAILED
     
-class TransactionCreate(Transaction):
+class TransactionCreate(TransactionBase):
     account_id: int
 
-class TransactionResponse(Transaction):
+class TransactionResponse(TransactionBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    account : AccountResponse | None = None
+    account : AccountBase | None = None

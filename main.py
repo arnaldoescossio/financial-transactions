@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from api.routes.accounts_api import router as account_router
 from api.routes.auth import router as auth_router
 from api.routes.transactions_api import router as transaction_router
+from domain.exceptions.account_not_found import AccountNotFoundException
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 
 app = FastAPI()
@@ -39,6 +40,13 @@ def general_http_exception_handler(request: Request, exception: RequestValidatio
 
 @app.exception_handler(NoValidTransactionException)
 def general_http_exception_handler(request: Request, exception: NoValidTransactionException):
+    return not_found(exception)
+
+@app.exception_handler(AccountNotFoundException)
+def general_http_exception_handler(request: Request, exception: AccountNotFoundException):
+    return not_found(exception)
+
+def not_found(exception):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,  
         content={"detail": exception.args[0]},

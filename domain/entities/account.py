@@ -1,8 +1,9 @@
 from typing import Literal
-
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-class Account(BaseModel):
+
+class AccountBase(BaseModel):
+    id: int | None = None
     balance: float = Field(ge=0.00)
     type: Literal["checking", "savings"] = Field(default="checking")
 
@@ -13,14 +14,13 @@ class Account(BaseModel):
     #         raise ValueError("balance cannot be negative")
     #     return value
 
-class AccountCreate(Account):
+class AccountCreate(AccountBase):
     pass
 
-class AccountResponse(Account):
+class AccountResponse(AccountBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int 
-    # transactions: list[Transaction] = Field(default_factory=list)
+    transactions: list | None = None
 
 
 #     @field_validator("balance")
