@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from application.use_cases.transaction.get_transactions_by_account import GetTransactionsByAccountUseCase
 from application.use_cases.use_case_factory import UseCaseFactory
 from domain.entities.transaction import TransactionCreate, TransactionResponse
-from domain.enums import transaction_status
-from domain.enums import transaction_status
 from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.transaction_repository import TransactionRepository
 from infrastructure.database import get_db

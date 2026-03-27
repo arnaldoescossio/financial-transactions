@@ -1,3 +1,5 @@
+from typing import override
+
 from application.use_cases.base_use_case import UseCase
 from domain.entities.account import AccountCreate, AccountResponse
 
@@ -5,6 +7,7 @@ from domain.entities.account import AccountCreate, AccountResponse
 class CreateAccountUseCase(UseCase):
     """Use case for creating a new account."""
     
+    @override
     def execute(self, account: AccountCreate) -> AccountResponse:
         """Create a new account.
         

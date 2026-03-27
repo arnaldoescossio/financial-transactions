@@ -5,7 +5,6 @@ from application.dtos.transaction_report_dto import TransactionReportDTO
 
 from application.use_cases.base_use_case import UseCase
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
-from domain.repositories.transaction_repository import TransactionRepository
 
 
 class GenerateTransactionReportUseCase(UseCase[TransactionReportDTO]):      

@@ -9,8 +9,6 @@ from domain.entities.account import AccountCreate, AccountResponse
 from domain.repositories.account_repository import AccountRepository
 from infrastructure.database import get_db
 from api.security.auth import verify_token
-from infrastructure.models.account_model import AccountModel
-from infrastructure.models.transaction_model import TransactionModel
 
 
 router = APIRouter(prefix="/api/v1", tags=["accounts"])
