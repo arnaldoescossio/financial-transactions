@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
+from application.use_cases.transaction.create_transaction import CreateTransactionUseCase
 from application.use_cases.transaction.get_transactions_by_account import GetTransactionsByAccountUseCase
-from application.use_cases.use_case_factory import UseCaseFactory
 from domain.entities.transaction import TransactionCreate, TransactionResponse
 from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.transaction_repository import TransactionRepository
 from infrastructure.database import get_db
 from application.config.logging_config import logger
-from application.use_cases.enums.transaction_use_case_type import TransactionUseCaseType
 from api.security.auth import verify_token
 
 router = APIRouter(prefix="/api/v1", tags=["transactions"])
@@ -26,19 +25,8 @@ def create_transaction(
 ) -> TransactionResponse:
     logger.info(f"User {user['user']} is creating a new transaction")
     repository = TransactionRepository(db)
-    use_case = UseCaseFactory.create(TransactionUseCaseType.CREATE, repository)
+    use_case = CreateTransactionUseCase(repository)
     return use_case.execute(transaction_data)
-
-@router.get("/transactions/report")
-def generate_report(
-    user = Depends(verify_token),
-    db: Session = Depends(get_db)
-):
-    logger.info(f"User {user['user']} is generating a transaction report")
-    repository = TransactionRepository(db)
-    use_case = UseCaseFactory.create(TransactionUseCaseType.REPORT, repository)
-    return use_case.execute()
-
 
 @router.get(
     "/transactions/{account_id}/accounts",
