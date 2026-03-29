@@ -9,11 +9,11 @@ from infrastructure.database import get_db
 from application.config.logging_config import logger
 from api.security.auth import verify_token
 
-router = APIRouter(prefix="/api/v1", tags=["transactions"])
+router = APIRouter(tags=["transactions"])
 
 
 @router.post(
-    "/transactions",
+    "",
     response_model=TransactionResponse,
     response_model_exclude={"transactions"},
     status_code=status.HTTP_201_CREATED,
@@ -29,7 +29,7 @@ def create_transaction(
     return use_case.execute(transaction_data)
 
 @router.get(
-    "/transactions/{account_id}/accounts",
+    "/{account_id}/accounts",
     response_model=list[TransactionResponse],
     response_model_exclude={
         "__all__": {

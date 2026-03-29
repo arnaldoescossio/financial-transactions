@@ -10,11 +10,11 @@ from api.routes.transactions_api import router as transaction_router
 from domain.exceptions.account_not_found import AccountNotFoundException
 from domain.exceptions.no_valid_transactions_exception import NoValidTransactionException
 
-app = FastAPI()
+app = FastAPI(root_path="/api/v1")
 
-app.include_router(auth_router)
-app.include_router(transaction_router)
-app.include_router(account_router)
+app.include_router(auth_router, prefix="/token")
+app.include_router(transaction_router, prefix="/transactions")
+app.include_router(account_router, prefix="/accounts")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

@@ -11,11 +11,11 @@ from infrastructure.database import get_db
 from api.security.auth import verify_token
 
 
-router = APIRouter(prefix="/api/v1", tags=["accounts"])
+router = APIRouter(tags=["accounts"])
 
 
 @router.post(
-    "/accounts",
+    "",
     response_model=AccountResponse,
     response_model_exclude={"transactions"},
     status_code=status.HTTP_201_CREATED,
@@ -29,7 +29,7 @@ def create_account(
     use_case = CreateAccountUseCase(repository=AccountRepository(db))
     return use_case.execute(account_data)
 
-@router.get("/account/{account_id}", response_model=AccountResponse)
+@router.get("/{account_id}", response_model=AccountResponse)
 def get_account(
     account_id: int,
     user = Depends(verify_token),
