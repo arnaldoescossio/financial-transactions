@@ -1,35 +1,32 @@
-from typing import override
+from typing import Tuple, override
 
-from sqlalchemy import select
-from sqlalchemy.orm import joinedload
+from sqlalchemy import Result, select
+from sqlalchemy.orm import selectinload
 
-from domain.entities.account import AccountBase, AccountResponse
-from domain.enums.transaction_status import TransactionStatus
 from domain.repositories.base_repository import Repository
 from infrastructure.models.account_model import AccountModel
-from infrastructure.models.transaction_model import TransactionModel
 
 
 class AccountRepository(Repository[AccountModel]):
     """Repository for managing account data."""
 
     @override
-    def save(self, account) -> AccountModel:
+    async def save(self, account) -> AccountModel:
         """Create a new account in the repository."""
-        model = AccountModel(
-            balance=account.balance,
-            type=account.type
-        )
+        model = AccountModel(balance=account.balance, type=account.type)
         self._db.add(model)
-        self._db.commit()
-        self._db.refresh(model)
+        await self._db.commit()
+        await self._db.refresh(model)
         return model
 
     @override
-    def get_by_id(self, account_id) -> AccountModel | None:
-        return (
-            self._db.execute(select(AccountModel).where(AccountModel.id == account_id)).scalars().first()
+    async def get_by_id(self, account_id) -> AccountModel | None:
+        result: Result[Tuple[AccountModel]]   = await self._db.execute(
+            select(AccountModel)
+            .where(AccountModel.id == account_id)
+            .options(selectinload(AccountModel.transactions))
         )
+        return result.scalar()
 
     # @abstractmethod
     # def update(self, account):

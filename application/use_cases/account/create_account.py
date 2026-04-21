@@ -8,7 +8,7 @@ class CreateAccountUseCase(UseCase):
     """Use case for creating a new account."""
     
     @override
-    def execute(self, account: AccountCreate) -> AccountResponse:
+    async def execute(self, account: AccountCreate) -> AccountResponse:
         """Create a new account.
         
         Args:
@@ -21,7 +21,7 @@ class CreateAccountUseCase(UseCase):
             ValueError: If the account data is invalid
         """
         
-        account = self.repository.save(account)
+        account = await self.repository.save(account)
 
         return AccountResponse(
             id=account.id,

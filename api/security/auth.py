@@ -1,3 +1,5 @@
+from typing import Any
+
 from jose import JWTError, jwt, ExpiredSignatureError
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -9,7 +11,7 @@ ALGORITHM = "HS256"
 
 security = HTTPBearer()
 
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict[str, Any]:
     token = credentials.credentials
 
     try:

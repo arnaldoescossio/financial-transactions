@@ -1,22 +1,32 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker,DeclarativeBase
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://postgres:postgres@localhost:5432/transactions")
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
-engine = create_engine(DATABASE_URL, echo=True)
-SessionLocal = sessionmaker(autoflush=False, bind=engine)
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql+asyncpg://postgres:postgres@localhost:5432/transactions"
+)
+
+engine = create_async_engine(DATABASE_URL, echo=True)
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
 
 class Base(DeclarativeBase):
     pass
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-        db.commit()
-    except:
-        db.rollback()
-        raise
-    finally:
-        db.close()
+
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
+    # try:
+    #     yield db
+    #     await db.commit()
+    # except:
+    #     await db.rollback()
+    #     raise
+    # finally:
+    #     await db.close()
