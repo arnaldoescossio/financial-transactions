@@ -3,7 +3,7 @@ from typing import override
 from asyncpg import exceptions
 from sqlalchemy.exc import IntegrityError
 
-from app.config.logging_config import logger
+from app.core.config.logging_config import logger
 from app.domain.entities.account import AccountResponse
 from app.domain.entities.transaction import TransactionCreate, TransactionResponse
 from app.domain.exceptions.account_not_found import AccountNotFoundException

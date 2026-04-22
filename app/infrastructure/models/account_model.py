@@ -3,7 +3,6 @@ from typing import Literal
 
 from sqlalchemy import DateTime, Float, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing_extensions import Literal
 
 from app.infrastructure.database import Base
 

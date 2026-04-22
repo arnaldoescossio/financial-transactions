@@ -1,17 +1,20 @@
 from typing import Any
 
-from jose import JWTError, jwt, ExpiredSignatureError
-from fastapi import HTTPException, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import ExpiredSignatureError, JWTError, jwt
 
+from app.core.config.env_config import settings
 
-SECRET_KEY = "supersecretkey"
-ALGORITHM = "HS256"
-
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.jwt_algorithm
 
 security = HTTPBearer()
 
-def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict[str, Any]:
+
+def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict[str, Any]:
     token = credentials.credentials
 
     try:

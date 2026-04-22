@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.security.auth import verify_token
-from app.config.logging_config import logger
+from app.core.config.logging_config import logger
 from app.domain.entities.transaction import TransactionCreate, TransactionResponse
 from app.domain.enums.transaction_status import TransactionStatus
 from app.domain.repositories.transaction_repository import TransactionRepository
