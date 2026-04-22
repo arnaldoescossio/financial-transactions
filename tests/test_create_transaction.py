@@ -1,17 +1,16 @@
-import pytest
 from unittest.mock import Mock
 
-from pytest_mock import mocker
+from app.dtos.create_transaction_dto import CreateTransactionDTO
 
-from application.use_cases.transaction.create_transaction import CreateTransactionUseCase
-from application.dtos.create_transaction_dto import CreateTransactionDTO
-from domain.entities.transaction import TransactionBase
-from domain.enums.transaction_status import TransactionStatus
-from domain.repositories.transaction_repository import TransactionRepository
+from app.domain.entities.transaction import TransactionBase
+from app.domain.enums.transaction_status import TransactionStatus
+from app.domain.repositories.transaction_repository import TransactionRepository
+from app.use_cases.transaction.create_transaction import CreateTransactionUseCase
 
 
 class FakeTransactionRepository(TransactionRepository):
     """Fake repository for testing."""
+
     def __init__(self):
         self.saved_transactions = []
 
@@ -31,12 +30,14 @@ def test_create_transaction_use_case_execute(mocker):
 
     # Create DTO
     dto = CreateTransactionDTO(amount=100.0, status="SUCCESS")
-    
+
     # Mock the to_entity method
-    mock_transaction = TransactionBase(id=None, amount=100.0, status=TransactionStatus.SUCCESS)
+    mock_transaction = TransactionBase(
+        id=None, amount=100.0, status=TransactionStatus.SUCCESS
+    )
     mocker.patch.object(dto, "to_entity", return_value=mock_transaction)
     dto.to_entity = Mock(return_value=mock_transaction)
-    
+
     # Execute
     result = use_case.execute(dto)
 
@@ -52,10 +53,12 @@ def test_create_transaction_use_case_saves_to_repository():
     use_case = CreateTransactionUseCase(repository)
 
     # Create a real transaction
-    transaction = TransactionBase(id=None, amount=50.0, status=TransactionStatus.SUCCESS)
+    transaction = TransactionBase(
+        id=None, amount=50.0, status=TransactionStatus.SUCCESS
+    )
     dto = CreateTransactionDTO(amount=50.0, status="SUCCESS")
     dto.to_entity = Mock(return_value=transaction)
-    
+
     # Execute
     result = use_case.execute(dto)
 
@@ -68,14 +71,16 @@ def test_create_transaction_use_case_with_mock_repository():
     """Test with mocked repository."""
     # Create mock repository
     mock_repository = Mock(spec=TransactionRepository)
-    mock_transaction = TransactionBase(id=1, amount=75.0, status=TransactionStatus.SUCCESS)
+    mock_transaction = TransactionBase(
+        id=1, amount=75.0, status=TransactionStatus.SUCCESS
+    )
     mock_repository.save.return_value = mock_transaction
 
     use_case = CreateTransactionUseCase(mock_repository)
 
     dto = CreateTransactionDTO(amount=75.0, status="SUCCESS")
     dto.to_entity = Mock(return_value=mock_transaction)
-    
+
     result = use_case.execute(dto)
 
     # Verify repository was called

@@ -4,14 +4,14 @@ from starlette import status
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse
 
-from domain.exceptions.account_not_found import AccountNotFoundException
-from domain.exceptions.no_valid_transactions_exception import (
+from app.domain.exceptions.account_not_found import AccountNotFoundException
+from app.domain.exceptions.no_valid_transactions_exception import (
     NoValidTransactionException,
 )
 
 
 def register_exception_handlers(app: FastAPI):
-    
+
     @app.exception_handler(StarletteHTTPException)
     async def general_http_exception_handler(
         request: Request, exception: StarletteHTTPException

@@ -1,9 +1,12 @@
 import pytest
+from app.use_cases.transaction.generate_transaction_report import (
+    GenerateTransactionReportUseCase,
+)
 
-from application.use_cases.transaction.generate_transaction_report import GenerateTransactionReportUseCase
-from domain.entities.transaction import TransactionBase
-from domain.enums.transaction_status import TransactionStatus
-from domain.repositories.transaction_repository import TransactionRepository
+from app.domain.entities.transaction import TransactionBase
+from app.domain.enums.transaction_status import TransactionStatus
+from app.domain.repositories.transaction_repository import TransactionRepository
+
 
 def test_generate_transaction_report():
     class FakeTransactionRepository(TransactionRepository):
@@ -13,14 +16,13 @@ def test_generate_transaction_report():
                 TransactionBase(id=1, amount=100.0, status=TransactionStatus.SUCCESS),
                 # Failed transaction
                 TransactionBase(id=2, amount=50.0, status=TransactionStatus.FAILED),
-                # Another valid transaction         
+                # Another valid transaction
                 TransactionBase(id=3, amount=200.0, status=TransactionStatus.SUCCESS),
             ]
 
         def save(self, transaction):
             raise None
 
-        
     repository = FakeTransactionRepository()
     use_case = GenerateTransactionReportUseCase(repository)
 
@@ -29,7 +31,8 @@ def test_generate_transaction_report():
     assert report.valid_count == 2
     assert report.total_amount == 300.0
     assert report.average_amount == 150.0
-    assert report.failed_count == 1 
+    assert report.failed_count == 1
+
 
 def test_generate_transaction_report_no_valid_transactions():
     class EmptyTransactionRepository(TransactionRepository):
@@ -42,7 +45,6 @@ def test_generate_transaction_report_no_valid_transactions():
 
         def save(self, transaction):
             return None
-
 
     repository = EmptyTransactionRepository()
     use_case = GenerateTransactionReportUseCase(repository)

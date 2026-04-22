@@ -3,12 +3,12 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from api.exception_handler.handlers import register_exception_handlers
-from api.routes.accounts_api import router as account_router
-from api.routes.auth import router as auth_router
-from api.routes.transactions_api import router as transaction_router
-from application.config.logging_config import logger
-from infrastructure.database import Base, engine
+from app.api.exception_handler.handlers import register_exception_handlers
+from app.api.v1.routes.accounts_api import router as account_router
+from app.api.v1.routes.auth import router as auth_router
+from app.api.v1.routes.transactions_api import router as transaction_router
+from app.config.logging_config import logger
+from app.infrastructure.database import Base, engine
 
 
 @asynccontextmanager

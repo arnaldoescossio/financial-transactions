@@ -3,8 +3,8 @@ from typing import Tuple, override
 from sqlalchemy import Result, select
 from sqlalchemy.orm import selectinload
 
-from domain.repositories.base_repository import Repository
-from infrastructure.models.account_model import AccountModel
+from app.domain.repositories.base_repository import Repository
+from app.infrastructure.models.account_model import AccountModel
 
 
 class AccountRepository(Repository[AccountModel]):
@@ -21,7 +21,7 @@ class AccountRepository(Repository[AccountModel]):
 
     @override
     async def get_by_id(self, account_id) -> AccountModel | None:
-        result: Result[Tuple[AccountModel]]   = await self._db.execute(
+        result: Result[Tuple[AccountModel]] = await self._db.execute(
             select(AccountModel)
             .where(AccountModel.id == account_id)
             .options(selectinload(AccountModel.transactions))

@@ -3,10 +3,10 @@ from typing import Sequence, override
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from domain.entities.transaction import TransactionCreate
-from domain.enums.transaction_status import TransactionStatus
-from domain.repositories.base_repository import Repository
-from infrastructure.models.transaction_model import TransactionModel
+from app.domain.entities.transaction import TransactionCreate
+from app.domain.enums.transaction_status import TransactionStatus
+from app.domain.repositories.base_repository import Repository
+from app.infrastructure.models.transaction_model import TransactionModel
 
 
 class TransactionRepository(Repository[TransactionModel]):
@@ -19,7 +19,9 @@ class TransactionRepository(Repository[TransactionModel]):
         )
         self._db.add(model)
         await self._db.commit()
-        await self._db.refresh(model, attribute_names=["account"])  # Refresh to get the account relationship loaded
+        await self._db.refresh(
+            model, attribute_names=["account"]
+        )  # Refresh to get the account relationship loaded
         return model
 
     async def get_by_account_id(
