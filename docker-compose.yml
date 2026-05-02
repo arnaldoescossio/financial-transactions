@@ -1,13 +1,13 @@
 services:
-  api:
-    build: .
-    container_name: transaction_api
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/transactions
+  # api:
+  #   build: .
+  #   container_name: transaction_api
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/transactions
 
   db:
     image: postgres:15

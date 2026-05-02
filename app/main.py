@@ -8,15 +8,13 @@ from app.api.v1.routes.accounts_api import router as account_router
 from app.api.v1.routes.auth import router as auth_router
 from app.api.v1.routes.transactions_api import router as transaction_router
 from app.core.config.logging_config import logger
-from app.infrastructure.database import Base, engine
+from app.infrastructure.database import engine
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     # ── Startup ──────────────────────────────────────────────────────────
     logger.info("Application starting up...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
     yield
     # ── Shutdown ─────────────────────────────────────────────────────────
     logger.info("Application shutting down...")

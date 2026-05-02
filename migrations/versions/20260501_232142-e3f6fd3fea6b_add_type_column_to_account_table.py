@@ -1,8 +1,8 @@
-"""add type column
+"""add type column to account table
 
-Revision ID: 35e85de9c43b
-Revises: 345e004ec29a
-Create Date: 2026-03-22 19:16:33.366429
+Revision ID: e3f6fd3fea6b
+Revises: 814f6d13ce38
+Create Date: 2026-05-01 23:21:42.501769
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '35e85de9c43b'
-down_revision: Union[str, Sequence[str], None] = '345e004ec29a'
+revision: str = 'e3f6fd3fea6b'
+down_revision: Union[str, Sequence[str], None] = '814f6d13ce38'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
