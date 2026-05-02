@@ -6,10 +6,12 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-import app.infrastructure.models  # noqa: F401 - ensure models are imported for Alembic's autogenerate
 from app.core.config.env_config import settings
 from app.infrastructure.database import Base
-
+import app.infrastructure.models  # noqa: F401 - Import models to register with Base.metadata
+# from app.infrastructure.models.user_model import Base as UserBase
+# from app.infrastructure.models.account_model import Base as AccountBase
+# from app.infrastructure.models.transaction_model import Base as TransactionBase
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -51,7 +53,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
-        # autogenerate=True,
+        autogenerate=True,
     )
 
     with context.begin_transaction():
@@ -62,7 +64,7 @@ def do_run_migrations(connection: Connection) -> None:
     context.configure(
         connection=connection,
         target_metadata=target_metadata,
-        # autogenerate=True,
+        autogenerate=True,
     )
 
     with context.begin_transaction():

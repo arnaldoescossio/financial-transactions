@@ -179,7 +179,6 @@ For issues or questions, please open an issue in the repository.
 
 ## Next Steps
 - Create separated User Enums
-- Create migration to create User table
 - Create User API
 - Create User Service
 - Create User Repository
