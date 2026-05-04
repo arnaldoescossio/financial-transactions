@@ -1,184 +1,148 @@
 # Financial Transactions API
 
-A FastAPI-based REST API for managing financial transactions with authentication, domain-driven design, and PostgreSQL persistence.
+FastAPI REST API for financial accounts and transactions, with JWT authentication, SQLAlchemy persistence, Alembic migrations, and layered architecture.
 
 ## Features
 
-- **RESTful API** built with FastAPI
-- **Authentication** with JWT token-based security
-- **Domain-Driven Design** with clear separation of concerns
-- **Transaction Management** with comprehensive reporting
-- **Database Migrations** using Alembic
-- **PostgreSQL** database with SQLAlchemy ORM
-- **Docker Support** for containerized deployment
-- **Comprehensive Testing** with pytest and code coverage
-- **Structured Logging** for debugging and monitoring
+- FastAPI endpoints for accounts, transactions, and auth token generation
+- JWT token verification middleware
+- Layered architecture (`api`, `use_cases`, `domain`, `infrastructure`)
+- PostgreSQL + SQLAlchemy async session management
+- Alembic migrations
+- Test suite organized with mirrored folder strategy
+- Dockerized runtime with `uvicorn`
+- CI pipeline with `uv` + `pyproject.toml` / `uv.lock`
 
 ## Project Structure
 
-```
+```text
 .
-├── application/              # Application layer (use cases, DTOs)
-│   ├── config/              # Configuration (logging)
-│   ├── dtos/                # Data Transfer Objects
-│   └── use_cases/           # Business logic
-├── auth_token/              # Authentication token generation
-├── domain/                  # Domain layer (entities, exceptions)
-│   ├── entities/            # Core domain entities
-│   ├── enums/               # Domain enumerations
-│   ├── exceptions/          # Custom exceptions
-│   └── repositories/        # Repository interfaces
-├── infrastructure/          # Infrastructure layer (database, repositories)
-│   ├── database.py          # Database configuration
-│   ├── models/              # SQLAlchemy models
-│   └── repositories/        # Repository implementations
-├── interfaces/              # Interfaces layer (API routes)
-│   └── api/
-│       ├── routes/          # API endpoints
-│       └── security/        # Security utilities
-├── migrations/              # Alembic database migrations
-├── tests/                   # Test suite
-├── main.py                  # Application entry point
-├── requirements.txt         # Python dependencies
-├── Dockerfile               # Docker configuration
-└── docker-compose.yml       # Docker Compose for local development
+├── app/
+│   ├── api/
+│   │   ├── security/
+│   │   └── v1/routes/
+│   ├── core/config/
+│   ├── domain/
+│   │   ├── entities/
+│   │   ├── enums/
+│   │   ├── exceptions/
+│   │   └── repositories/
+│   ├── infrastructure/
+│   │   ├── database.py
+│   │   └── models/
+│   ├── use_cases/
+│   │   ├── account/
+│   │   └── transaction/
+│   └── main.py
+├── tests/
+│   ├── api/
+│   │   ├── security/
+│   │   └── v1/routes/
+│   ├── domain/repositories/
+│   └── use_cases/
+├── alembic/
+├── Dockerfile
+├── pyproject.toml
+└── uv.lock
 ```
 
-## Setup
+## Requirements
 
-### Prerequisites
+- Python `3.14+`
+- PostgreSQL `15+` (or compatible)
+- `uv` package manager
+- Docker (optional)
 
-- Python 3.11+
-- PostgreSQL 12+
-- Docker & Docker Compose (optional)
+## Local Setup
 
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd financial-transations
-   ```
-
-2. **Create and activate virtual environment**
-   ```bash
-   python -m venv venv
-   # On Windows
-   venv\Scripts\activate
-   # On macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables**
-   ```bash
-   # Create .env file (or set directly)
-   DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/transactions
-   ```
-
-5. **Run database migrations**
-   ```bash
-   alembic upgrade head
-   ```
-
-## Running the Application
-
-### Development Mode
+1. Clone repository:
 
 ```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+git clone <repository-url>
+cd financial-transations
 ```
 
-The API will be available at `http://0.0.0.0:8000`
-
-### Using Docker Compose
+2. Install dependencies from `pyproject.toml` + `uv.lock`:
 
 ```bash
-docker-compose up --build
+uv sync
 ```
 
-## API Endpoints
+3. Configure environment variables (`.env`), for example:
 
-### Authentication
+```env
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/transactions
+SECRET_KEY=your-secret
+JWT_ALGORITHM=HS256
+```
 
-- **GET** `/api/v1/token` - Generate access token
-  ```bash
-  curl http://localhost:8000/api/v1/token
-  ```
+4. Run migrations:
 
-### Transactions
+```bash
+uv run alembic upgrade head
+```
 
-- **POST** `/api/v1/transactions` - Create a new transaction
-  - Requires valid JWT token in Authorization header
-  - Request body: CreateTransactionDTO
+## Run Application
 
-## Environment Variables
+Development mode:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql+psycopg2://postgres:postgres@localhost:5432/transactions` |
+```bash
+uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Docs:
+
+- Swagger UI: `http://localhost:8000/docs`
+- ReDoc: `http://localhost:8000/redoc`
+
+## Docker
+
+Build:
+
+```bash
+docker build -t financial-transations .
+```
+
+Run:
+
+```bash
+docker run --rm -p 8000:8000 financial-transations
+```
 
 ## Testing
 
-Run the test suite with coverage:
+Run all tests:
 
 ```bash
-pytest --cov=. --cov-report=html
+uv run pytest
 ```
 
-Test files are located in the `tests/` directory and cover:
-- DTOs validation
-- Use case execution
-- Transaction creation
-- Report generation
-- Factory pattern implementation
+Run with coverage:
 
-View coverage report at `htmlcov/index.html`
-
-## Database Migrations
-
-Create a new migration:
 ```bash
-alembic revision --autogenerate -m "Description of changes"
+uv run pytest --cov=. --cov-report=term-missing
 ```
 
-Apply migrations:
-```bash
-alembic upgrade head
-```
+Current mirrored test layout includes:
 
-Rollback migrations:
-```bash
-alembic downgrade -1
-```
+- `tests/use_cases/account/`
+- `tests/use_cases/transaction/`
+- `tests/domain/repositories/`
+- `tests/api/v1/routes/`
+- `tests/api/security/`
 
-## Architecture
+## CI
 
-This project follows **Domain-Driven Design (DDD)** principles:
+GitHub Actions (`.github/workflows/ci.yml`) uses:
 
-- **Domain Layer** - Core business logic and entities
-- **Application Layer** - Use cases and business workflows
-- **Infrastructure Layer** - Data persistence and external services
-- **Interfaces Layer** - API endpoints and external communication
+- Python `3.14`
+- `uv sync --frozen` for dependencies
+- `uv run pytest --cov=.` for tests
 
-## Logging
+## Main API Routes
 
-Logging is configured in `application/config/logging_config.py`. Logs are output to console with detailed information about application flow and errors.
-
-## License
-
-[Add your license information here]
-
-## Support
-
-For issues or questions, please open an issue in the repository.
-
-## Next Steps
-- Create separated User Enums
-- Create User API
-- Create User Service
-- Create User Repository
+- `GET /api/v1/token`
+- `POST /api/v1/accounts`
+- `GET /api/v1/accounts/{account_id}`
+- `POST /api/v1/transactions`
+- `GET /api/v1/transactions/{account_id}/account`
