@@ -22,6 +22,9 @@ class CreateTransactionUseCase(UseCase[TransactionCreate]):
                 raise AccountNotFoundException(
                     "Failed to create transaction: Account not found"
                 )
+            else:
+                logger.error(f"Integrity error: {e}")
+                raise Exception("Failed to create transaction")
         except Exception as e:
             logger.error(f"Error occurred while creating transaction: {e}")
             raise Exception("Failed to create transaction")

@@ -1,5 +1,6 @@
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class AccountBase(BaseModel):
@@ -14,8 +15,10 @@ class AccountBase(BaseModel):
     #         raise ValueError("balance cannot be negative")
     #     return value
 
+
 class AccountCreate(AccountBase):
     pass
+
 
 class AccountResponse(AccountBase):
     model_config = ConfigDict(from_attributes=True)
@@ -30,10 +33,11 @@ class AccountResponse(AccountBase):
 #             raise ValueError("balance cannot be negative")
 #         return v.quantize(Decimal("0.01")) if v is not None else None
 
-    # def add_transaction(self, transaction: Transaction):
-    #     transaction.account_id = self.id
-    #     self.transactions.append(transaction)
-    #     self.balance += transaction.amount
+# def add_transaction(self, transaction: Transaction):
+#     transaction.account_id = self.id
+#     self.transactions.append(transaction)
+#     self.balance += transaction.amount
 
-    # def get_transaction_by_status(self, status: TransactionStatus) -> list[Transaction]:
-    #     return [t for t in self.transactions if t.status == status]
+# def get_transaction_by_status(self, status: TransactionStatus) -> list[Transaction]:
+#     return [t for t in self.transactions if t.status == status]
+#     return [t for t in self.transactions if t.status == status]
