@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.security.auth import verify_token
 from app.core.config.logging_config import logger
-from app.domain.entities.transaction import TransactionCreate, TransactionResponse
+from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.repositories.transaction_repository import TransactionRepository
+from app.infrastructure.adapters.repositories.transaction_repository import TransactionRepository
 from app.infrastructure.database import get_db
 from app.use_cases.transaction.create_transaction import CreateTransactionUseCase
 from app.use_cases.transaction.get_transactions_by_account import (

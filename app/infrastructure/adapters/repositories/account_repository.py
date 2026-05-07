@@ -3,11 +3,11 @@ from typing import Tuple, override
 from sqlalchemy import Result, select
 from sqlalchemy.orm import selectinload
 
-from app.domain.repositories.base_repository import Repository
+from app.domain.ports.repositories.base_repository import Repository
 from app.infrastructure.models.account_model import AccountModel
 
 
-class AccountRepository(Repository[AccountModel]):
+class AccountRepository(Repository):
     """Repository for managing account data."""
 
     @override

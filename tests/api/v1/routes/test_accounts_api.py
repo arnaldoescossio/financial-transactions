@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from app.domain.entities.account import AccountCreate, AccountResponse
+from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
 from app.domain.exceptions.account_not_found import AccountNotFoundException
 from app.infrastructure.models.account_model import AccountModel
 from app.api.v1.routes import accounts_api

@@ -1,7 +1,7 @@
 from typing import override
 
 from app.core.config.logging_config import logger
-from app.domain.entities.transaction import TransactionBase
+from app.api.v1.schemas.transaction_schema import TransactionBase
 from app.domain.enums.transaction_status import TransactionStatus
 from app.use_cases.base_use_case import UseCase
 

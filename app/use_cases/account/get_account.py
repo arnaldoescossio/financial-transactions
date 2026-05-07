@@ -1,6 +1,6 @@
 from typing import override
 
-from app.domain.entities.account import AccountResponse
+from app.api.v1.schemas.account_schema import AccountResponse
 from app.domain.exceptions.account_not_found import AccountNotFoundException
 from app.infrastructure.models.account_model import AccountModel
 from app.use_cases.base_use_case import UseCase

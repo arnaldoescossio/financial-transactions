@@ -3,13 +3,13 @@ from typing import Sequence, override
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.domain.entities.transaction import TransactionCreate
+from app.api.v1.schemas.transaction_schema import TransactionCreate
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.repositories.base_repository import Repository
+from app.domain.ports.repositories.base_repository import Repository
 from app.infrastructure.models.transaction_model import TransactionModel
 
 
-class TransactionRepository(Repository[TransactionModel]):
+class TransactionRepository(Repository):
     @override
     async def save(self, transaction: TransactionCreate) -> TransactionModel:
         model = TransactionModel(

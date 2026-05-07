@@ -2,9 +2,9 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from app.domain.entities.transaction import TransactionBase
+from app.api.v1.schemas.transaction_schema import TransactionBase
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.repositories.transaction_repository import TransactionRepository
+from app.infrastructure.repositories.transaction_repository import TransactionRepository
 from app.infrastructure.models.transaction_model import TransactionModel
 from app.use_cases.transaction.get_transactions_by_account import (
     GetTransactionsByAccountUseCase,

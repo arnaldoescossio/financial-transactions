@@ -3,8 +3,8 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from app.api.v1.routes import transactions_api
-from app.domain.entities.account import AccountBase
-from app.domain.entities.transaction import TransactionCreate, TransactionResponse
+from app.api.v1.schemas.account_schema import AccountBase
+from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.enums.transaction_status import TransactionStatus
 
 

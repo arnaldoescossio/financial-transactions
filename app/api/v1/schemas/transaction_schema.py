@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
-from app.domain.entities.account import AccountBase
+from app.api.v1.schemas.account_schema import AccountBase
 from app.domain.enums.transaction_status import TransactionStatus
 
 

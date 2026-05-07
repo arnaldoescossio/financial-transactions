@@ -1,10 +1,10 @@
 import uuid
+from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field
 
 from app.domain.entities.user import UserRole, UserStatus
 
-from datetime import datetime
 
 class UserResponse(BaseModel):
     id: uuid.UUID
@@ -13,7 +13,7 @@ class UserResponse(BaseModel):
     full_name: str | None
     role: UserRole
     status: UserStatus
-    # is_verified: bool
+    is_verified: bool
     created_at: datetime
     updated_at: datetime
 

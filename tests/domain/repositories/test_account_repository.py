@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from app.domain.entities.account import AccountCreate
-from app.domain.repositories.account_repository import AccountRepository
+from app.api.v1.schemas.account_schema import AccountCreate
+from app.infrastructure.repositories.account_repository import AccountRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel  # noqa: F401
 

@@ -2,8 +2,8 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
-from app.domain.entities.account import AccountCreate, AccountResponse
-from app.domain.repositories.account_repository import AccountRepository
+from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
+from app.infrastructure.repositories.account_repository import AccountRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.use_cases.account.create_account import CreateAccountUseCase
 

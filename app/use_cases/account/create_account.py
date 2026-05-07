@@ -1,6 +1,6 @@
 from typing import override
 
-from app.domain.entities.account import AccountCreate, AccountResponse
+from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
 from app.use_cases.base_use_case import UseCase
 
 
@@ -12,13 +12,10 @@ class CreateAccountUseCase(UseCase):
         """Create a new account.
 
         Args:
-            dto: The data transfer object containing account information
+            account: The account data to create
 
         Returns:
             The created account entity
-
-        Raises:
-            ValueError: If the account data is invalid
         """
 
         account = await self.repository.save(account)

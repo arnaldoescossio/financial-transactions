@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.security.auth import verify_token
 from app.core.config.logging_config import logger
-from app.domain.entities.account import AccountCreate, AccountResponse
-from app.domain.repositories.account_repository import AccountRepository
+from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
+from app.infrastructure.adapters.repositories.account_repository import AccountRepository
 from app.infrastructure.database import get_db
 from app.use_cases.account.create_account import CreateAccountUseCase
 from app.use_cases.account.get_account import GetAccountUseCase

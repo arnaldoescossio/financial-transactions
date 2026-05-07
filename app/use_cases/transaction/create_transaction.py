@@ -4,8 +4,8 @@ from asyncpg import exceptions
 from sqlalchemy.exc import IntegrityError
 
 from app.core.config.logging_config import logger
-from app.domain.entities.account import AccountResponse
-from app.domain.entities.transaction import TransactionCreate, TransactionResponse
+from app.api.v1.schemas.account_schema import AccountResponse
+from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.exceptions.account_not_found import AccountNotFoundException
 from app.use_cases.base_use_case import UseCase
 

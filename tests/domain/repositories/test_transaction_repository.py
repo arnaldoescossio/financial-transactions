@@ -7,9 +7,9 @@ import pytest
 # Load AccountModel so TransactionModel's relationship() can configure.
 from app.infrastructure.models.account_model import AccountModel  # noqa: F401
 
-from app.domain.entities.transaction import TransactionCreate
+from app.api.v1.schemas.transaction_schema import TransactionCreate
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.repositories.transaction_repository import TransactionRepository
+from app.infrastructure.repositories.transaction_repository import TransactionRepository
 from app.infrastructure.models.transaction_model import TransactionModel
 
 

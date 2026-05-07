@@ -5,10 +5,10 @@ import pytest
 from asyncpg import exceptions
 from sqlalchemy.exc import IntegrityError
 
-from app.domain.entities.transaction import TransactionCreate, TransactionResponse
+from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.enums.transaction_status import TransactionStatus
 from app.domain.exceptions.account_not_found import AccountNotFoundException
-from app.domain.repositories.transaction_repository import TransactionRepository
+from app.infrastructure.repositories.transaction_repository import TransactionRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel
 from app.use_cases.transaction.create_transaction import CreateTransactionUseCase
