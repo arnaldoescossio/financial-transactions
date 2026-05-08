@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from sqlalchemy import UUID, DateTime, String, func
+from sqlalchemy import UUID, Boolean, DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.domain.entities.user import UserRole, UserStatus
@@ -53,12 +53,12 @@ class UserModel(Base):
         default=UserStatus.ACTIVE,
         server_default=UserStatus.ACTIVE,
     )
-    # is_verified: Mapped[bool] = mapped_column(
-    #     Boolean,
-    #     nullable=False,
-    #     default=False,
-    #     server_default="false",
-    # )
+    is_verified: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=False,
+        server_default="false",
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

@@ -30,7 +30,7 @@ class User(BaseModel):
     full_name: str | None = None
     role: UserRole = UserRole.USER
     status: UserStatus = UserStatus.ACTIVE
-    # is_verified: bool = False
+    is_verified: bool = False
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
