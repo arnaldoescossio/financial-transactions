@@ -7,10 +7,12 @@ from app.core.config.logging_config import logger
 from app.api.v1.schemas.account_schema import AccountResponse
 from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.exceptions.account_not_found import AccountNotFoundException
+from app.infrastructure.adapters.repositories.transaction_repository import TransactionRepository
 from app.use_cases.base_use_case import UseCase
 
 
-class CreateTransactionUseCase(UseCase[TransactionCreate]):
+class CreateTransactionUseCase(UseCase[TransactionCreate, TransactionCreate, TransactionRepository]):
+    """Use case for creating a new transaction."""
     @override
     async def execute(self, data: TransactionCreate) -> TransactionResponse:
         try:
