@@ -49,7 +49,12 @@ def register_exception_handlers(app: FastAPI):
 
     @app.exception_handler(Exception)
     async def general_http_exception_handler(request: Request, exception: Exception):  # noqa: F811
-        return JSONResponse
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": "Internal server error",
+                     "cause": str(exception.__cause__),
+                     "error": str(exception)},
+        )
 
     def not_found(exception):
         return JSONResponse(
