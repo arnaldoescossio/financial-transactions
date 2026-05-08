@@ -4,8 +4,8 @@ from starlette import status
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import JSONResponse
 
-from app.domain.exceptions.account_not_found import AccountNotFoundException
-from app.domain.exceptions.no_valid_transactions_exception import (
+from app.core.exceptions.account_exceptions import AccountNotFoundException
+from app.core.exceptions.transaction_exceptions import (
     NoValidTransactionException,
 )
 

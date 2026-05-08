@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, Mock
 import pytest
 
 from app.api.v1.schemas.account_schema import AccountResponse
-from app.domain.exceptions.account_not_found import AccountNotFoundException
+from app.core.exceptions.account_exceptions import AccountNotFoundException
 from app.infrastructure.repositories.account_repository import AccountRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel

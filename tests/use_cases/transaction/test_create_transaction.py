@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.exceptions.account_not_found import AccountNotFoundException
+from app.core.exceptions.account_exceptions import AccountNotFoundException
 from app.infrastructure.repositories.transaction_repository import TransactionRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel

@@ -1,7 +1,7 @@
 from typing import override
 
 from app.api.v1.schemas.account_schema import AccountResponse
-from app.domain.exceptions.account_not_found import AccountNotFoundException
+from app.core.exceptions.account_exceptions import AccountNotFoundException
 from app.infrastructure.models.account_model import AccountModel
 from app.use_cases.base_use_case import UseCase
 
