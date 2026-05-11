@@ -3,32 +3,31 @@ from typing import Sequence, override
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from app.api.v1.schemas.transaction_schema import TransactionCreate
+from app.domain.entities.account import Account
+from app.domain.entities.transaction import Transaction
 from app.domain.enums.transaction_status import TransactionStatus
-from app.domain.ports.repositories.base_repository import Repository
+from app.domain.ports.repositories.transaction_repository import (
+    AbstractTransactionRepository,
+)
 from app.infrastructure.models.transaction_model import TransactionModel
 
 
-class TransactionRepository(Repository):
+class TransactionRepository(AbstractTransactionRepository):
     @override
-    async def save(self, transaction: TransactionCreate) -> TransactionModel:
-        model = TransactionModel(
-            amount=transaction.amount,
-            status=transaction.status.value,
-            account_id=transaction.account_id,
-        )
+    async def save(self, transaction: Transaction) -> Transaction:
+        model: TransactionModel = self._to_model(transaction)
         self._db.add(model)
         await self._db.commit()
         await self._db.refresh(
             model, attribute_names=["account"]
         )  # Refresh to get the account relationship loaded
-        return model
+        return self._to_entity(model)
 
     async def get_by_account_id(
         self,
         account_id: int,
         transaction_status: TransactionStatus = TransactionStatus.SUCCESS,
-    ) -> list[TransactionModel]:
+    ) -> list[Transaction]:
         """Retrieve transactions by account ID and optional status.
             If status is not provided, it defaults to TransactionStatus.SUCCESS.
 
@@ -37,7 +36,7 @@ class TransactionRepository(Repository):
             transaction_status (TransactionStatus, optional): Filter transactions by status. Defaults to TransactionStatus.SUCCESS.
 
         Returns:
-            list[TransactionModel]: A list of transactions matching the criteria.
+            list[Transaction]: A list of transactions matching the criteria.
         """
 
         transactions: Sequence[TransactionModel] = (
@@ -55,4 +54,21 @@ class TransactionRepository(Repository):
             .all()
         )
 
-        return transactions
+        return [self._to_entity(model) for model in transactions]
+
+    def _to_entity(self, model: TransactionModel) -> Transaction:
+        return Transaction(
+            id=model.id,
+            amount=model.amount,
+            status=TransactionStatus(model.status),
+            account=Account(**model.account.__dict__) if model.account else None,
+            account_id=model.account_id,
+        )
+
+    def _to_model(self, entity: Transaction) -> TransactionModel:
+        return TransactionModel(
+            id=entity.id,
+            amount=entity.amount,
+            status=entity.status.value,
+            account_id=entity.account_id,
+        )

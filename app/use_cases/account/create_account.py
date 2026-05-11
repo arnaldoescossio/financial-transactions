@@ -1,28 +1,31 @@
 from typing import override
 
 from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
-from app.infrastructure.adapters.repositories.account_repository import AccountRepository
+from app.domain.entities.account import Account
+from app.domain.service.account_service import AccountService
 from app.use_cases.base_use_case import UseCase
 
 
-class CreateAccountUseCase(UseCase[AccountCreate, AccountResponse, AccountRepository]):  # noqa: F821
+class CreateAccountUseCase(UseCase[AccountCreate, AccountResponse, AccountService]):
     """Use case for creating a new account."""
 
     @override
-    async def execute(self, account: AccountCreate) -> AccountResponse:
+    async def execute(self, account_data: AccountCreate) -> AccountResponse:
         """Create a new account.
 
         Args:
-            account: The account data to create
+            account_data: The account data to create
 
         Returns:
             The created account entity
         """
-
-        account = await self.repository.save(account)
+        # Convert schema to entity
+        account = Account(balance=account_data.balance, type=account_data.type)
+        created_account = await self.service.save(account)
 
         return AccountResponse(
-            id=account.id,
-            balance=account.balance,
-            type=account.type,
+            id=created_account.id,
+            balance=created_account.balance,
+            type=created_account.type,
+            transactions=created_account.transactions,
         )

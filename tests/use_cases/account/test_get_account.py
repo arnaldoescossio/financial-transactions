@@ -1,13 +1,13 @@
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+from app.infrastructure.repositories.account_repository import AccountRepository
 
 from app.api.v1.schemas.account_schema import AccountResponse
 from app.core.exceptions.account_exceptions import AccountNotFoundException
-from app.infrastructure.repositories.account_repository import AccountRepository
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel
-from app.use_cases.account.get_account import GetAccountUseCase
+from app.use_cases.account.find_account import FindAccountUseCase
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ async def test_get_account_success(mock_repository, mock_account_with_transactio
     # Arrange
     account_id = 10
     mock_repository.get_by_id = AsyncMock(return_value=mock_account_with_transactions)
-    use_case = GetAccountUseCase(mock_repository)
+    use_case = FindAccountUseCase(mock_repository)
 
     # Act
     result = await use_case.execute(account_id)
@@ -71,7 +71,7 @@ async def test_get_account_not_found_raises_exception(mock_repository):
     # Arrange
     account_id = 999
     mock_repository.get_by_id = AsyncMock(return_value=None)
-    use_case = GetAccountUseCase(mock_repository)
+    use_case = FindAccountUseCase(mock_repository)
 
     # Act / Assert
     with pytest.raises(AccountNotFoundException) as exc_info:
@@ -89,7 +89,7 @@ async def test_get_account_repository_called_with_correct_id(
     # Arrange
     account_id = 42
     mock_repository.get_by_id = AsyncMock(return_value=mock_account_with_transactions)
-    use_case = GetAccountUseCase(mock_repository)
+    use_case = FindAccountUseCase(mock_repository)
 
     # Act
     await use_case.execute(account_id)

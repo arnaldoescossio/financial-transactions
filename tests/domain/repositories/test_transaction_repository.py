@@ -4,12 +4,14 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-# Load AccountModel so TransactionModel's relationship() can configure.
-from app.infrastructure.models.account_model import AccountModel  # noqa: F401
-
 from app.api.v1.schemas.transaction_schema import TransactionCreate
 from app.domain.enums.transaction_status import TransactionStatus
-from app.infrastructure.repositories.transaction_repository import TransactionRepository
+from app.infrastructure.adapters.repositories.transaction_repository import (
+    TransactionRepository,
+)
+
+# Load AccountModel so TransactionModel's relationship() can configure.
+from app.infrastructure.models.account_model import AccountModel  # noqa: F401
 from app.infrastructure.models.transaction_model import TransactionModel
 
 
@@ -48,9 +50,7 @@ async def test_save_persists_transaction_and_refreshes_account(
     assert added.account_id == 42
 
     mock_db_session.commit.assert_awaited_once()
-    mock_db_session.refresh.assert_awaited_once_with(
-        added, attribute_names=["account"]
-    )
+    mock_db_session.refresh.assert_awaited_once_with(added, attribute_names=["account"])
     assert result is added
 
 

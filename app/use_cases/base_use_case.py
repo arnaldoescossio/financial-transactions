@@ -1,16 +1,16 @@
-from abc import ABC, abstractmethod
+from asyncio import Protocol
 
-class UseCase[D, A, R](ABC):
+
+class UseCase[D, R, S](Protocol):
     """Abstract base class for all use cases.
 
     All use cases must implement the execute method which contains the business logic.
     """
 
-    def __init__(self, repository: R) -> None:
-        self.repository: R = repository
+    def __init__(self, service: S) -> None:
+        self.service: S = service
 
-    @abstractmethod
-    def execute(self, data: D) -> A:
+    async def execute(self, data: D) -> R:
         """Execute the use case logic and return the result.
 
         Returns:

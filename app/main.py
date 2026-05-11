@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.exception_handler.handlers import register_exception_handlers
 from app.api.v1.routes.accounts_api import router as account_router
-from app.api.v1.routes.auth import router as auth_router
-from app.api.v1.routes.admin_api import router as admin_router
+from app.api.v1.routes.auth import router as token_router # Temporary token endpoint for testing
+from app.api.v1.routes.auth_api import router as auth_router
 from app.api.v1.routes.transactions_api import router as transaction_router
 from app.core.config.env_config import settings
 from app.core.config.logging_config import logger
@@ -36,8 +36,8 @@ app.add_middleware(
 
 register_exception_handlers(app)
 
-app.include_router(auth_router, prefix="/token")
+app.include_router(token_router, prefix="/token")
 app.include_router(transaction_router, prefix="/transactions")
 app.include_router(account_router, prefix="/accounts")
-app.include_router(admin_router, prefix="/admin")
+app.include_router(auth_router, prefix="/auth")
 

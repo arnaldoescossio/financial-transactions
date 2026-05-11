@@ -3,20 +3,31 @@ from typing import override
 from asyncpg import exceptions
 from sqlalchemy.exc import IntegrityError
 
-from app.core.config.logging_config import logger
 from app.api.v1.schemas.account_schema import AccountResponse
 from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
+from app.core.config.logging_config import logger
 from app.core.exceptions.account_exceptions import AccountNotFoundException
-from app.infrastructure.adapters.repositories.transaction_repository import TransactionRepository
+from app.domain.entities.account import Account
+from app.domain.entities.transaction import Transaction
+from app.domain.service.transaction_service import TransactionService
 from app.use_cases.base_use_case import UseCase
 
 
-class CreateTransactionUseCase(UseCase[TransactionCreate, TransactionCreate, TransactionRepository]):
+class CreateTransactionUseCase(
+    UseCase[TransactionCreate, TransactionResponse, TransactionService]
+):
     """Use case for creating a new transaction."""
+
     @override
     async def execute(self, data: TransactionCreate) -> TransactionResponse:
         try:
-            transaction = await self.repository.save(data)
+            transaction = Transaction(
+                amount=data.amount,
+                status=data.status,
+                # account=Account(id=data.account_id),
+                account_id=data.account_id,
+            )
+            transaction = await self.service.save(transaction)
             logger.info(f"Transaction {transaction.id} created successfully")
         except IntegrityError as e:
             if isinstance(e.orig.__cause__, exceptions.ForeignKeyViolationError):
