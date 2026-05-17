@@ -32,7 +32,7 @@ jobs:
         run: uv sync --frozen
 
       - name: Run tests
-        run: uv run pytest --cov=.
+        run: uv run pytest --cov=. --cov-fail-under=100
 
   publish:
     needs: test
