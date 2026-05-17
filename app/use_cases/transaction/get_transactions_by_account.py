@@ -1,6 +1,6 @@
 from typing import override
 
-from app.api.v1.schemas.transaction_schema import TransactionBase, TransactionResponse
+from app.api.v1.schemas.transaction_schema import TransactionResponse
 from app.core.config.logging_config import logger
 from app.domain.entities.transaction import Transaction
 from app.domain.enums.transaction_status import TransactionStatus
@@ -20,9 +20,7 @@ class GetTransactionsByAccountUseCase(
         transaction_status: TransactionStatus = params.get(
             "transaction_status", TransactionStatus.SUCCESS
         )
-        transactions: list[
-            Transaction
-        ] = await self.service.get_transactions_by_account_id(
+        transactions: list[Transaction] = await self.service.get_transactions_by_account_id(
             account_id, transaction_status
         )
         logger.info(

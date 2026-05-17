@@ -1,10 +1,10 @@
 from unittest.mock import AsyncMock, Mock
 
 import pytest
-from app.infrastructure.repositories.account_repository import AccountRepository
 
 from app.api.v1.schemas.account_schema import AccountResponse
 from app.core.exceptions.account_exceptions import AccountNotFoundException
+from app.domain.service.account_service import AccountService
 from app.infrastructure.models.account_model import AccountModel
 from app.infrastructure.models.transaction_model import TransactionModel
 from app.use_cases.account.find_account import FindAccountUseCase
@@ -13,7 +13,7 @@ from app.use_cases.account.find_account import FindAccountUseCase
 @pytest.fixture
 def mock_repository():
     """Create a mock account repository for testing."""
-    return Mock(spec=AccountRepository)
+    return Mock(spec=AccountService)
 
 
 @pytest.fixture
