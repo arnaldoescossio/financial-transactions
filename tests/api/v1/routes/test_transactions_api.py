@@ -24,8 +24,8 @@ async def test_create_transaction_returns_use_case_response(monkeypatch):
     fake_use_case.execute = AsyncMock(return_value=expected)
 
     class FakeCreateTransactionUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+        def __init__(self, service):
+            self.service = service
 
         async def execute(self, data):
             return await fake_use_case.execute(data)
@@ -37,7 +37,7 @@ async def test_create_transaction_returns_use_case_response(monkeypatch):
     result = await transactions_api.create_transaction(
         transaction_data=payload,
         user={"user": "tester"},
-        db=Mock(),
+        use_case=FakeCreateTransactionUseCase(service=None),
     )
 
     assert isinstance(result, TransactionResponse)
@@ -68,11 +68,13 @@ async def test_list_transactions_returns_use_case_response(monkeypatch):
     fake_use_case.execute = AsyncMock(return_value=expected)
 
     class FakeGetTransactionsByAccountUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+        def __init__(self, service):
+            self.service = service
 
-        async def execute(self, account_id, status):
-            return await fake_use_case.execute(account_id, status)
+        async def execute(self, data):
+            return await fake_use_case.execute(
+                data["account_id"], data["transaction_status"]
+            )
 
     monkeypatch.setattr(
         transactions_api,
@@ -85,7 +87,7 @@ async def test_list_transactions_returns_use_case_response(monkeypatch):
         account_id=7,
         status=status_filter,
         user={"user": "tester"},
-        db=Mock(),
+        use_case=FakeGetTransactionsByAccountUseCase(service=None),
     )
 
     assert isinstance(result, list)
@@ -101,11 +103,13 @@ async def test_list_transactions_passes_status_dict_value(monkeypatch):
     fake_use_case.execute = AsyncMock(return_value=[])
 
     class FakeGetTransactionsByAccountUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+        def __init__(self, service):
+            self.service = service
 
-        async def execute(self, account_id, status):
-            return await fake_use_case.execute(account_id, status)
+        async def execute(self, data):
+            return await fake_use_case.execute(
+                data["account_id"], data["transaction_status"]
+            )
 
     monkeypatch.setattr(
         transactions_api,
@@ -117,7 +121,7 @@ async def test_list_transactions_passes_status_dict_value(monkeypatch):
         account_id=22,
         status={"status": TransactionStatus.FAILED},
         user={"user": "tester"},
-        db=Mock(),
+        use_case=FakeGetTransactionsByAccountUseCase(service=None),
     )
 
     fake_use_case.execute.assert_awaited_once_with(22, TransactionStatus.FAILED)

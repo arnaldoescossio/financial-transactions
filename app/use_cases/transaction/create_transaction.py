@@ -7,7 +7,6 @@ from app.api.v1.schemas.account_schema import AccountResponse
 from app.api.v1.schemas.transaction_schema import TransactionCreate, TransactionResponse
 from app.core.config.logging_config import logger
 from app.core.exceptions.account_exceptions import AccountNotFoundException
-from app.domain.entities.account import Account
 from app.domain.entities.transaction import Transaction
 from app.domain.service.transaction_service import TransactionService
 from app.use_cases.base_use_case import UseCase

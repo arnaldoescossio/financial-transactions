@@ -2,10 +2,9 @@ from unittest.mock import AsyncMock, Mock
 
 import pytest
 
+from app.api.v1.routes import accounts_api
 from app.api.v1.schemas.account_schema import AccountCreate, AccountResponse
 from app.core.exceptions.account_exceptions import AccountNotFoundException
-from app.infrastructure.models.account_model import AccountModel
-from app.api.v1.routes import accounts_api
 
 
 @pytest.mark.asyncio
@@ -18,8 +17,8 @@ async def test_create_account_returns_use_case_response(monkeypatch):
     fake_use_case.execute = AsyncMock(return_value=expected)
 
     class FakeCreateAccountUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+        def __init__(self, service):
+            self.service = service
 
         async def execute(self, payload):
             return await fake_use_case.execute(payload)
@@ -29,7 +28,7 @@ async def test_create_account_returns_use_case_response(monkeypatch):
     result = await accounts_api.create_account(
         account_data=account_data,
         user={"user": "tester"},
-        db=Mock(spec=AccountModel),
+        use_case=FakeCreateAccountUseCase(service=None),
     )
 
     assert isinstance(result, AccountResponse)
@@ -51,19 +50,19 @@ async def test_get_account_returns_use_case_response(monkeypatch):
     fake_use_case = Mock()
     fake_use_case.execute = AsyncMock(return_value=expected)
 
-    class FakeGetAccountUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+    class FakeFindAccountUseCase:
+        def __init__(self, service):
+            self.service = service
 
         async def execute(self, account_id):
             return await fake_use_case.execute(account_id)
 
-    monkeypatch.setattr(accounts_api, "GetAccountUseCase", FakeGetAccountUseCase)
+    monkeypatch.setattr(accounts_api, "FindAccountUseCase", FakeFindAccountUseCase)
 
     result = await accounts_api.get_account(
         account_id=9,
         user={"user": "tester"},
-        db=Mock(spec=AccountModel),
+        use_case=FakeFindAccountUseCase(service=None),
     )
 
     assert isinstance(result, AccountResponse)
@@ -82,20 +81,20 @@ async def test_get_account_propagates_not_found(monkeypatch):
         side_effect=AccountNotFoundException("Account not found")
     )
 
-    class FakeGetAccountUseCase:
-        def __init__(self, repository):
-            self.repository = repository
+    class FakeFindAccountUseCase:
+        def __init__(self, service):
+            self.service = service
 
         async def execute(self, account_id):
             return await fake_use_case.execute(account_id)
 
-    monkeypatch.setattr(accounts_api, "GetAccountUseCase", FakeGetAccountUseCase)
+    monkeypatch.setattr(accounts_api, "FindAccountUseCase", FakeFindAccountUseCase)
 
     with pytest.raises(AccountNotFoundException) as exc_info:
         await accounts_api.get_account(
             account_id=404,
             user={"user": "tester"},
-            db=Mock(spec=AccountModel),
+            use_case=FakeFindAccountUseCase(service=None),
         )
 
     assert "Account not found" in str(exc_info.value)
