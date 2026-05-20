@@ -27,7 +27,7 @@ class User(BaseModel):
     email: EmailStr
     username: str = Field(min_length=3, max_length=50)
     hashed_password: str
-    full_name: str | None = None
+    full_name: str | None = Field(min_length=3, max_length=120, default=None)
     role: UserRole = UserRole.USER
     status: UserStatus = UserStatus.ACTIVE
     is_verified: bool = False

@@ -9,12 +9,6 @@ class TransactionBase(BaseModel):
     amount: float
     status: TransactionStatus
 
-    def is_valid(self) -> bool:
-        return self.status == TransactionStatus.SUCCESS and self.amount > 0
-
-    def is_failed(self) -> bool:
-        return self.status == TransactionStatus.FAILED
-
 
 class TransactionCreate(TransactionBase):
     account_id: int
