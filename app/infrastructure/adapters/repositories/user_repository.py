@@ -1,5 +1,5 @@
-from typing import Optional
 import uuid
+from typing import Optional
 
 from sqlalchemy import delete, func, select
 
@@ -8,7 +8,7 @@ from app.domain.ports.repositories.user_repository import AbstractUserRepository
 from app.infrastructure.models.user_model import UserModel
 
 
-class UserDatabaseRepository(AbstractUserRepository):
+class UserRepository(AbstractUserRepository):
     """Concrete implementation of AbstractUserRepository using a SQL database."""
 
     async def get_by_id(self, user_id: uuid.UUID) -> Optional[User]:
